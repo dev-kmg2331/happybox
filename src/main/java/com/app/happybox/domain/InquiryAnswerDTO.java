@@ -14,9 +14,9 @@ import java.util.List;
 @Data
 @Builder
 public class InquiryAnswerDTO {
-    private Long id;
-    private String inquiryAnswerContent;
-    private LocalDateTime createdDate;
-    private LocalDateTime updatedDate;
-    private List<InquiryAnswerFileDTO> inquiryAnswerFileDTOS = new ArrayList<>();
+    private final Long id;
+    private final String inquiryAnswerContent;
+    private final LocalDateTime createdDate;
+    private final LocalDateTime updatedDate;
+    private final List<InquiryAnswerFileDTO> inquiryAnswerFileDTOS;
 }

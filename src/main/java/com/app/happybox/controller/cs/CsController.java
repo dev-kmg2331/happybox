@@ -48,7 +48,7 @@ public class CsController {
     public String goToNoticeDetail(@PathVariable Long id, Model model){
         model.addAttribute("noticeDetail", noticeService.getNoticeWithId(id));
 
-        return "/CS/notice-detail";
+        return "CS/notice-detail";
     }
 
     //    문의 작성 페이지로 이동

@@ -23,7 +23,7 @@ public class DistributorConstroller {
 //    회원가입 폼
     @GetMapping("join")
     public String goToJoinForm(DistributorDTO distributorDTO){
-        return "/member/company-join";
+        return "member/company-join";
     }
 
 //    회원가입 완료

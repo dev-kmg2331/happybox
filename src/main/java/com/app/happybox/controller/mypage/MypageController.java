@@ -53,13 +53,13 @@ public class MypageController {
     public RedirectView goMyPage(@AuthenticationPrincipal UserDetail userDetail) {
         switch (userDetail.getUserRole()) {
             case MEMBER:
-                return new RedirectView("/mypage/member/subscribe");
+                return new RedirectView("mypage/member/subscribe");
             case WELFARE:
-                return new RedirectView("/mypage/welfare/rider/write");
+                return new RedirectView("mypage/welfare/rider/write");
             case DISTRIBUTOR:
-                return new RedirectView("/mypage/distributor/product");
+                return new RedirectView("mypage/distributor/product");
             default:
-                return new RedirectView("/main/welfare");
+                return new RedirectView("main/welfare");
         }
     }
 
@@ -72,7 +72,7 @@ public class MypageController {
         if (orderSubscriptionDTO != null) {
             model.addAttribute("userProfile", userFileService.getDetail(orderSubscriptionDTO.getWelfareId()));
         }
-        return "/mypage/member/subscribe";
+        return "mypage/member/subscribe";
     }
 
     //    구독 취소
@@ -175,7 +175,7 @@ public class MypageController {
     @MypageHeaderValues
     @GetMapping("member/subscription-bookmark")
     public String getSubscriptionBookmarkList(@AuthenticationPrincipal UserDetail userDetail) {
-        return "/mypage/member/welfare-bookmark";
+        return "mypage/member/welfare-bookmark";
     }
 
     //    복지관 찜 목록
@@ -214,7 +214,7 @@ public class MypageController {
     @GetMapping("member/edit")
     public String updateMemberInfo(@AuthenticationPrincipal UserDetail userDetail, Model model) {
         model.addAttribute("memberDTO", memberService.getDetail(userDetail.getId()));
-        return "/mypage/member/member-editor-form";
+        return "mypage/member/member-editor-form";
     }
 
     //    회원정보수정
@@ -229,7 +229,7 @@ public class MypageController {
     @GetMapping("member/address-editor")
     public String updateMemberDeliveryAddress(@AuthenticationPrincipal UserDetail userDetail, Model model) {
         model.addAttribute("memberDTO", memberService.getDetail(userDetail.getId()));
-        return "/mypage/member/address-editor-form";
+        return "mypage/member/address-editor-form";
     }
 
     //    배송지정보수정
@@ -258,7 +258,7 @@ public class MypageController {
     @MypageHeaderValues
     @GetMapping("member/checkPassword")
     public String checkMemberPassword(@AuthenticationPrincipal UserDetail userDetail) {
-        return "/mypage/member/member-editor";
+        return "mypage/member/member-editor";
     }
 
     //    비밀번호 인증

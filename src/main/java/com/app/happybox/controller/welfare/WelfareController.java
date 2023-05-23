@@ -67,10 +67,11 @@ public class WelfareController {
     public Slice<WelfareDTO> getSearchResult(@PageableDefault(page = 1, size = 5) Pageable pageable, String welfareName) {
         return welfareService.getListBySearch(PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize()), welfareName);
     }
+
     @GetMapping("detail/{id}")
     public String goDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetail userDetail) {
         model.addAttribute("subscription", subscriptionService.findByIdWithDetail(id));
-        model.addAttribute("userId",userDetail.getId());
+        model.addAttribute("userId", userDetail.getId());
 
         // 좋아요 이미 눌렀는지 검사
         boolean checkLike = userDetail != null && subscriptionLikeService.checkLike(id, userDetail.getId());
@@ -92,7 +93,7 @@ public class WelfareController {
 
         int result = 0;
         // 비로그인시
-        if(userDetail == null) {
+        if (userDetail == null) {
             return -1;
         }
         boolean check = subscriptionLikeService.checkOutLike(subscriptionId, userDetail.getId());
@@ -101,7 +102,7 @@ public class WelfareController {
         return result;
     }
 
-     // 장바구니
+    // 장바구니
     @PostMapping("cart/add/{subscriptionId}")
     @ResponseBody
     public Long registerCart(@AuthenticationPrincipal UserDetail userDetail, @RequestBody SubscriptionCartDTO subscriptionCartDTO, @PathVariable Long subscriptionId) {
@@ -112,7 +113,7 @@ public class WelfareController {
     //    복지관 회원가입 폼
     @GetMapping("join")
     public String goToJoinForm(WelfareDTO welfareDTO) {
-        return "/member/welfare-join";
+        return "member/welfare-join";
     }
 
     //    복지관 회원가입 완료
@@ -124,28 +125,11 @@ public class WelfareController {
         return new RedirectView("/login");
     }
 
-//    구독했는지 확인
+    //    구독했는지 확인
     @GetMapping("sub/check")
     @ResponseBody
-    public Integer checkSubscribe(Long subscriptionId, @AuthenticationPrincipal UserDetail userDetail){
+    public Integer checkSubscribe(Long subscriptionId, @AuthenticationPrincipal UserDetail userDetail) {
         Integer count = subscriptionService.existsByMemberIdAndSubscriptionId(userDetail.getId(), subscriptionId);
         return count == null ? 0 : count;
     }
-
-//    user id로 cart 삭제
-    @GetMapping("cart/delete")
-    public Boolean deleteCart(@RequestParam Long id){
-        log.error("=============삭제하기 전======================");
-       subscriptionCartService.deleteCart(id);
-        log.error("=============삭제하기 후======================");
-       if(subscriptionCartService.findAllByUserId(id).isEmpty()){
-           log.error("============= 카트안에 비어있을때 ======================");
-           return true;
-       }
-       else {
-           log.error("============= 카트안에 있을때 ======================");
-           return false;
-       }
-    }
-
 }

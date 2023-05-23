@@ -19,7 +19,7 @@ public class OAuthController {
         MemberDTO memberDTO = (MemberDTO) session.getAttribute("member");
         if (memberDTO.getId() == null) {
             redirectAttributes.addFlashAttribute("member", memberDTO);
-            return new RedirectView("member/join");
+            return new RedirectView("/member/join");
         }
         return new RedirectView("/main/welfare");
     }

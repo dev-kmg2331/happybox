@@ -24,6 +24,6 @@ public class UserController {
 
     @GetMapping("/logout")
     public String logout(){
-        return "/main/welfare";
+        return "main/welfare";
     }
 }

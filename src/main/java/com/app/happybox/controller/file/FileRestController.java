@@ -18,7 +18,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FileRestController {
 
-    private static final String ABSOLUTE_PATH = "C:/upload";
+    private static final String ABSOLUTE_PATH = "/usr/project/upload";
 
     //    파일 업로드
     @PostMapping("upload")

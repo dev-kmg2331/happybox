@@ -64,7 +64,7 @@ public class WelfareMyPageController {
     public String goEditForm(@AuthenticationPrincipal UserDetail userDetail, Model model){
         WelfareDTO welfareDTO = welfareService.getDetail(userDetail.getId());
         model.addAttribute("welfareDTO",welfareDTO);
-        return "/mypage/welfare/welfare-editor-form";
+        return "mypage/welfare/welfare-editor-form";
     }
 
 //    복지관 회원 수정 완료
@@ -87,7 +87,7 @@ public class WelfareMyPageController {
         SubscriptionWelFareDTO subscriptionWelFareDTO = subscriptionService.getSubscriptionWelfareDTO(result.getId());
         log.error("들엉왔냐?",subscriptionWelFareDTO.toString());
         model.addAttribute("subscriptionWelFareDTO",subscriptionWelFareDTO);
-        return "/mypage/welfare/welfare-write";
+        return "mypage/welfare/welfare-write";
 
     }
 
@@ -107,7 +107,7 @@ public class WelfareMyPageController {
         model.addAttribute("welfareId",userDetail.getId());
         riderDTO.setWelfareId(userDetail.getId());
         model.addAttribute("riderDTO", riderDTO);
-        return "/mypage/welfare/rider-register";
+        return "mypage/welfare/rider-register";
     }
 
     @PostMapping("welfare/rider/write")
@@ -125,7 +125,7 @@ public class WelfareMyPageController {
         WelfareDTO welfareDTO = welfareService.getDetail(welfareId);
         log.info(welfareDTO.toString());
         model.addAttribute("welfareDTO",welfareDTO);
-        return "/mypage/welfare/rider";
+        return "mypage/welfare/rider";
     }
 
     @GetMapping("/welfare/getList")
@@ -144,7 +144,7 @@ public class WelfareMyPageController {
     @MypageHeaderValues
     @GetMapping("/welfare/inquiry")
     public String getInquiryList(@AuthenticationPrincipal UserDetail userDetail) {
-        return "/mypage/welfare/inquiry";
+        return "mypage/welfare/inquiry";
     }
 
     //    나의 문의내역 목록
@@ -159,7 +159,7 @@ public class WelfareMyPageController {
     @MypageHeaderValues
     @GetMapping("/welfare/unregister")
     public String unregister(@AuthenticationPrincipal UserDetail userDetail) {
-        return "/mypage/welfare/withdrawal";
+        return "mypage/welfare/withdrawal";
     }
 
     //    회원탈퇴

@@ -40,7 +40,7 @@ public class DistributorMypageController {
     @GetMapping("distributor/edit")
     public String updateDistributorInfo(@AuthenticationPrincipal UserDetail userDetail, Model model) {
         model.addAttribute("distributorDTO", distributorService.getDetail(userDetail.getId()));
-        return "/mypage/business/business-editor-form";
+        return "mypage/business/business-editor-form";
     }
 
 //    회원정보수정
@@ -54,7 +54,7 @@ public class DistributorMypageController {
     @MypageHeaderValues
     @GetMapping("distributor/unregister")
     public String unregister(@AuthenticationPrincipal UserDetail userDetail) {
-        return "/mypage/business/withdrawal";
+        return "mypage/business/withdrawal";
     }
 
 //    회원탈퇴
@@ -68,7 +68,7 @@ public class DistributorMypageController {
     @MypageHeaderValues
     @GetMapping("distributor/inquiry")
     public String getInquiryList(@AuthenticationPrincipal UserDetail userDetail) {
-        return "/mypage/business/inquiry";
+        return "5mypage/business/inquiry";
     }
 
     //    나의 문의내역 목록
@@ -99,7 +99,7 @@ public class DistributorMypageController {
     @MypageHeaderValues
     @GetMapping("distributor/product")
     public String getProductList(@AuthenticationPrincipal UserDetail userDetail) {
-        return "/mypage/business/product-list";
+        return "mypage/business/product-list";
     }
 
 //    상품 목록
@@ -114,7 +114,7 @@ public class DistributorMypageController {
     @MypageHeaderValues
     @GetMapping("distributor/sale")
     public String getSaleList(@AuthenticationPrincipal UserDetail userDetail) {
-        return "/mypage/business/sales-list";
+        return "mypage/business/sales-list";
     }
 
 //    판매 내역

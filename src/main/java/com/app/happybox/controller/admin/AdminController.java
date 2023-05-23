@@ -73,7 +73,7 @@ public class AdminController {
         Page<ReviewBoardDTO> list = reviewBoardService.getList(PageRequest.of(page - 1, 10));
         model.addAttribute("reviewBoards", list.getContent());
         model.addAttribute("pageDTO", new PageDTO(list));
-        return "/admin/admin-reviewBoardList";
+        return "admin/admin-reviewBoardList";
     }
 
     //    후기 게시물 조회
@@ -91,7 +91,7 @@ public class AdminController {
         model.addAttribute("recipeBoards", list.getContent());
         model.addAttribute("pageDTO", new PageDTO(list));
 
-        return "/admin/admin-recipeBoardList";
+        return "admin/admin-recipeBoardList";
     }
 
     //    레시피 게시물 조회
@@ -115,7 +115,7 @@ public class AdminController {
         Page<MemberDTO> list = memberService.getList(PageRequest.of(page - 1, 10));
         model.addAttribute("members", list.getContent());
         model.addAttribute("pageDTO", new PageDTO(list));
-        return "/admin/admin-memberList";
+        return "admin/admin-memberList";
     }
 
     //    회원 삭제
@@ -164,7 +164,7 @@ public class AdminController {
         Page<Distributor> list = distributorService.getList(PageRequest.of(0, 5));
         model.addAttribute("distributors", list.getContent());
         model.addAttribute("pageDTO", new PageDTO(list));
-        return "/admin/admin-distributorList";
+        return "admin/admin-distributorList";
     }
 
     //    유통회원 조회
@@ -173,7 +173,7 @@ public class AdminController {
         model.addAttribute("distributor", distributorService.getDetail(distributorId));
         model.addAttribute("distributorId", distributorId);
         model.addAttribute("userFile", userFileService.getDetail(distributorId));
-        return "/admin/admin-distributorDetail";
+        return "admin/admin-distributorDetail";
     }
 
     //  유통회원 상품 조회
@@ -220,7 +220,7 @@ public class AdminController {
         Page<WelfareDTO> list = welfareService.getList(PageRequest.of(0, 5));
         model.addAttribute("welfares", list.getContent());
         model.addAttribute("pageDTO", new PageDTO(list));
-        return "/admin/admin-welfareList";
+        return "admin/admin-welfareList";
     }
 
     //    복지관회원 조회
@@ -228,7 +228,7 @@ public class AdminController {
     public String getWelfareDetail(@PathVariable Long welfareId, Model model) {
         model.addAttribute("welfare", welfareService.getDetail(welfareId));
         model.addAttribute("userFile", userFileService.getDetail(welfareId));
-        return "/admin/admin-welfareDetail";
+        return "admin/admin-welfareDetail";
     }
 
     @GetMapping("welfare/subscriber/list/{welfareId}")
@@ -244,7 +244,7 @@ public class AdminController {
         Page<PaymentDTO> list = paymentService.getList(PageRequest.of(page - 1, 10));
         model.addAttribute("payments", list.getContent());
         model.addAttribute("pageDTO", new PageDTO(list));
-        return "/admin/admin-orderList";
+        return "admin/admin-orderList";
     }
 
     //    결제 삭제
