@@ -2,6 +2,7 @@ package com.app.happybox.controller.file;
 
 import com.app.happybox.service.board.ReviewBoardService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnailator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.FileCopyUtils;
@@ -16,6 +17,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/image/*")
 @RequiredArgsConstructor
+@Slf4j
 public class FileRestController {
 
     private static final String ABSOLUTE_PATH = "/usr/project/upload";
@@ -44,7 +46,7 @@ public class FileRestController {
             /* 해당 파일이 이미지인 경우 썸네일도 저장 */
             if (multipartFiles.get(i).getContentType().startsWith("image")) {
                 FileOutputStream out = new FileOutputStream(new File(path, "t_" + uuids.get(i) + "_" + multipartFiles.get(i).getOriginalFilename()));
-                InputStream inputStream = new FileInputStream("C:\\upload\\" + getPath() + "\\" + uuids.get(i)+ "_" + multipartFiles.get(i).getOriginalFilename());
+                InputStream inputStream = new FileInputStream("\\C:\\upload\\" + getPath() + "\\" + uuids.get(i)+ "_" + multipartFiles.get(i).getOriginalFilename());
                 Thumbnailator.createThumbnail(inputStream, out, 300, 300);
                 out.close();
                 filePath = "t_" + uuids.get(i) + "_" + multipartFiles.get(i).getOriginalFilename();

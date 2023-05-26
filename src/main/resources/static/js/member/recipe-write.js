@@ -98,6 +98,15 @@ $("form[name='form']").on("submit", function (e) {
     insertData.boardTitle = boardTitle;
     insertData.boardContent = boardContent;
 
+    if (
+        boardTitle == "" ||
+        boardContent == "" ||
+        insertData.recipeBoardFiles.length == 0
+    ) {
+        alertModal("모든 정보를 입력해주세요.");
+        return false; // submit 막기
+    }
+
     $.ajax({
         url: '/user-board/recipe-board-insert',
         data: JSON.stringify(insertData),
@@ -109,3 +118,13 @@ $("form[name='form']").on("submit", function (e) {
         }
     })
 });
+
+/* 모달창 */
+
+function alertModal(errorMsg) {
+    $("div#content-wrap").html(errorMsg)
+    $("div.modal").css("display", "flex").hide().fadeIn(500);
+    setTimeout(function () {
+        $("div.modal").fadeOut();
+    }, 2000);
+}

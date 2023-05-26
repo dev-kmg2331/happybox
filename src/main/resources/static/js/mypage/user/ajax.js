@@ -1,3 +1,7 @@
+
+// 페이지 버튼 개수
+const PAGE_AMOUNT = 7;
+
 let myPageService = (function() {
     function recipeBoardListAjax(page) {
         $.ajax({
@@ -87,9 +91,6 @@ let myPageService = (function() {
         $.ajax({
             url: "/mypage/member/recipe-bookmark-cancel",
             data: {"id": id},
-            success: function() {
-                location.reload();
-            }
         })
     }
 
@@ -97,9 +98,6 @@ let myPageService = (function() {
         $.ajax({
             url: "/mypage/member/subscription-bookmark-cancel",
             data: {"id": id},
-            success: function() {
-                location.reload();
-            }
         })
     }
 

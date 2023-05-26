@@ -37,10 +37,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(LoginFailedException.class)
-    protected RedirectView handleLoginFailedException(LoginFailedException e){
-        return new RedirectView("member/login?check=false");
+    protected RedirectView handleLoginFailedException(LoginFailedException e, HttpServletRequest request){
+        return new RedirectView("/login");
     }
-
-
 
 }

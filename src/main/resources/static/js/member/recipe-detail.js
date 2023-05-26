@@ -1,10 +1,5 @@
 /* recipe-board-detail.html */
 
-/* 텍스트 더보기 */
-$('.info-area__box').on('click', function () {
-    $(this).find('.info-area__box-list').css('height', '100%');
-});
-
 /* 이미지 slide 이벤트 */
 
 $(document).ready(function () {
@@ -116,17 +111,21 @@ function showDetail() {
           <div class="refrig-bnr">
             <a href="javascript:void(0)">
               <img
-                src="https://www.rankingdak.com/resources/pc/images/img/pc_delivery_banner2.jpg"
+                src="/img/market/free_delivery.jpg"
             /></a>
           </div>
         </div>
 
         <div class="info-area">
           <div class="info-area__btn">
-            <button type="button" class="update-btn">
+            `
+    if ($userId == recipe.memberDTO.userId) {
+        text +=
+            `
+            <a href="/user-board/recipe-board-modify/${recipe.id}" class="update-btn">
               <svg
                 class="write-button-icon"
-                style="enable-background: new 0 0 1696.162 1696.143"
+                style="enable-background: new 0 0 1696.162 1696.143;margin-top: 6px;margin-left: 6px;"
                 version="1.1"
                 viewBox="0 0 1696.162 1696.143"
                 width="1696.162px"
@@ -141,14 +140,19 @@ function showDetail() {
                 </g>
                 <g id="Layer_1" />
               </svg>
-            </button>
-            <button type="button" class="delete-btn">
+            </a>
+            <button type="button" class="delete-btn" onclick="deleteModal()"
+            data-id="${recipe.id}">
               <svg viewBox="0 0 448 512" class="delete-button-icon" xmlns="http://www.w3.org/2000/svg">
                 <path
                 d="M432 80h-82.38l-34-56.75C306.1 8.827 291.4 0 274.6 0H173.4C156.6 0 141 8.827 132.4 23.25L98.38 80H16C7.125 80 0 87.13 0 96v16C0 120.9 7.125 128 16 128H32v320c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V128h16C440.9 128 448 120.9 448 112V96C448 87.13 440.9 80 432 80zM171.9 50.88C172.9 49.13 174.9 48 177 48h94c2.125 0 4.125 1.125 5.125 2.875L293.6 80H154.4L171.9 50.88zM352 464H96c-8.837 0-16-7.163-16-16V128h288v320C368 456.8 360.8 464 352 464zM224 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S208 183.2 208 192v208C208 408.8 215.2 416 224 416zM144 416C152.8 416 160 408.8 160 400V192c0-8.844-7.156-16-16-16S128 183.2 128 192v208C128 408.8 135.2 416 144 416zM304 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S288 183.2 288 192v208C288 408.8 295.2 416 304 416z"
                 />
               </svg>
             </button>
+            `
+    }
+    text +=
+        `
             <div class="like-btn-wrap">
                 <a href="javascript:checkRecipeLike()">
                     <span class="like-btn">
@@ -158,12 +162,12 @@ function showDetail() {
             </div>
           </div>
           <span class="writer-button-wrap">
-            <p class="writer-name">${recipe.memberName}</p>
+            <p class="writer-name">${recipe.memberDTO.memberName}</p>
           </span>
           <h3 class="info-area__name">
             <span class="strong">${recipe.boardTitle}</span>
           </h3>
-          <div class="info-area__box">
+          <div class="info-area__box" onclick="showMoreText()";>
             <div class="info-area__box-list">
               <div class="info-area__box-cont">
                 <div class="detail-content">
@@ -179,10 +183,63 @@ function showDetail() {
 
 showDetail();
 
+/* 텍스트 더보기 */
+$('.info-area__box').on('click', function () {
+    $(this).find('.info-area__box-list').css('height', '100%');
+});
+
+const goDelete = `/user-board/recipe-board-detail/delete/${recipe.id}`;
+
+/* 게시글 삭제 */
+function deleteModal(){
+    $("#check-modal").css("display", "block");
+}
+
+// 댓글 삭제 모달
+function showReplyDeleteModal(deleteBtn) {
+    replyDeleteId = $(deleteBtn).data("id");
+    $("#reply-modal").css("display", "block");
+}
+
+/* 댓글 삭제 */
+const xBtn = $('.xBtn');
+
+// 닫기 버튼을 클릭했을 때
+$(".close").on("click", function () {
+    $(this).closest(".modal").css("display", "none");
+});
+
+// 예 버튼을 클릭했을 때
+function deleteBoard() {
+    $.ajax({
+        url: goDelete,
+        type: 'DELETE',
+        contentType: "application/json; charset=utf-8",
+        success: function() {
+            location.href = "/user-board/recipe-board-list";
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+
+// 모달창 외부를 클릭했을 때
+$(window).on("click", function (event) {
+    if ($(event.target).is('.modal')) {
+        $("#check-modal").css("display", "none");
+    }
+});
 
 /* 댓글 관련 js */
 const $moreReview = $(".more-review");
 const $reviewListWrap = $(".review-list-wrap");
+const USER_ROLE = {
+    MEMBER: "일반",
+    WELFARE: "복지관",
+    DISTRIBUTOR: "유통"
+}
 
 // 현재 페이지
 let page = 1;
@@ -212,8 +269,17 @@ $moreReview.on("click", function () {
     );
 });
 
+if ($userId) {
+    $(".reply-writer-info").append(
+        `
+        <span class="user-type">${USER_ROLE[$userRole]}</span>
+        <span class="user-id">${$userId}</span>
+    `
+    );
+}
+
 // 최신순
-$(".reivewDate").on("click", function () {
+$(".reviewDate").on("click", function () {
     page = 1;
     isReviewByDate = true
     $reviewListWrap.empty();
@@ -240,30 +306,32 @@ $(".orderLikeCount").on("click", function () {
     );
 });
 
-const USER_ROLE = {
-    MEMBER: "일반",
-    WELFARE: "복지관"
-}
-
-window.scroll()
-
 /* 댓글 append */
 function appendReplyList(reply, isPrepend) {
+    console.log(reply);
 
+    let text ='';
     let date = reply.updatedDate.split("T")[0];
 
-    let text = `
+    text += `
     <div class="review-list">
-        <span
+    `
+    if ($userId == reply.userId) {
+        text += `<span
             class="xBtn" 
             style="
             cursor: pointer;
             position: absolute;
             right: 17px;
-            top: -15px;"
-            onclick="deleteReply(this)"
+            top: -15px;
+            font-size: 25px;"
+            onclick="showReplyDeleteModal(this)"
             data-id="${reply.id}"
-        >X</span>
+        >&times;</span>
+    `
+    }
+    text +=
+        `
         <div class="user-info-wrap">
             <div class="user-info">
                 <span class="user-type">${USER_ROLE[reply.userRole]}</span>
@@ -276,24 +344,24 @@ function appendReplyList(reply, isPrepend) {
                     ${recipe.boardTitle}
                 </h3>
             </div>
-            <p class="review-content">
-                ${reply.replyContent}
-            </p>
+            <p class="review-content">${reply.replyContent}</p>
             <div class="review-footer">
                 <span class="review-date">${date}</span>
                 <div class="review-btn-wrap">
                     <button data-id="${reply.id}" onclick="checkOutLike(this)" class="review-rec-btn">
                         <span>도움돼요</span>
                         <span class="rec-count">${reply.replyLikeCount ? reply.replyLikeCount : 0}</span>
-                    </button>
-                    <button class="review-rec-btn update_review">
-                        <span>수정하기</span>
-                    </button>
+                    </button>`;
+    if ($userId == reply.userId) {
+        text += `<button onclick="showReplyUpdate(this)" data-onmodify="false" data-id="${reply.id}" class="review-rec-btn update_review">
+                            <span>수정하기</span>
+                        </button>`;
+    }
+    `</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    `;
+            `;
 
     // prepend 검사
     if (isPrepend) {
@@ -302,7 +370,6 @@ function appendReplyList(reply, isPrepend) {
     }
     $reviewListWrap.append(text);
 }
-
 
 /* 최신순, 추천순 정렬 */
 const $reviewOrder = $(".review-orders button");
@@ -316,25 +383,34 @@ $reviewOrder.on("click", function () {
 /* 수정버튼은 session에 있는 유저와 댓글 작성자와 비교하여 */
 /* 서로 일치할 때만 표시할 것 */
 /* 수정버튼 클릭시 수정 textarea 등장 */
+
 /* Ajax 콜백함수로 받아서 text에 데이터 꽃기 */
-const $updateReviewBtn = $(".update_review");
+function showReplyUpdate(button) {
 
-$updateReviewBtn.on("click", function () {
-    /* 수정 중임을 의미하는 클래스 */
-    const ON_UPDATE = "review-on-update";
+    let updateBtn = $(button);
 
-    let parent = $(this).parent().parent().parent();
+    // 수정 중이라면 return
+    if (updateBtn.data("onmodify")) return;
 
-    if (parent.hasClass(ON_UPDATE)) return;
+    // 수정창 부모
+    let parent = updateBtn.closest(".review-wrap");
+    let replyContent = updateBtn.closest(".review-footer").prev(".review-content");
+
+    // 댓글 내용
+    let contentText = replyContent.text().trim();
+    console.log(contentText);
+
+    // 댓글 id
+    let id = updateBtn.data("id");
+
+    updateBtn.data("onmodify", true);
 
     let text = `
     <div class="write-content-wrap">
         <form>
             <textarea
-                class="write-textarea"
-                placeholder="댓글 남기기"
-            ></textarea
-            ><button class="write-regist-btn" type="button">
+                class="write-textarea">${contentText}</textarea
+            ><button class="write-update-btn" type="button">
                 <span class="regist">등록</span>
             </button>
             <button class="write-cancel-btn" type="button">
@@ -346,21 +422,36 @@ $updateReviewBtn.on("click", function () {
 
     /* 수정 form append */
     parent.append(text);
-    parent.addClass(ON_UPDATE);
 
-    /* 등록버튼 이벤트 걸기 */
     /* 등록후 ajax 전송 */
-    $(".write-regist-btn").on("click", function () {
-        $(this).parent().parent().remove();
-        parent.removeClass(ON_UPDATE);
+    $(".write-update-btn").on("click", function () {
+        let data = {
+            replyContent: $(this).prev(".write-textarea").val()
+        }
+
+        $.ajax({
+            type: "patch",
+            url: `/user-board/recipe-board-detail/reply/modify/${id}`,
+            data: JSON.stringify(data),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                replyContent.text(response.replyContent);
+            }
+        });
+
+        // 수정창 닫기
+        updateBtn.data("onmodify", false);
+        $(this).closest(".write-content-wrap").remove();
     });
 
     /* 등록취소 이벤트 걸기 */
     $(".write-cancel-btn").on("click", function () {
-        $(this).parent().parent().remove();
-        parent.removeClass(ON_UPDATE);
-    })
-});
+        // 수정창 닫기
+        $(this).closest(".write-content-wrap").remove();
+        updateBtn.data("onmodify", false);
+    });
+}
 
 /* 댓글 작성 */
 const REPLY_URL = `/user-board/recipe-board-detail/reply/write/${recipe.id}`;
@@ -377,36 +468,24 @@ $replyWriteBtn.on("click", function () {
         REPLY_URL,
         {replyContent: $('.write-textarea').val()},
         (result) => {
-            let count = Number($(".review-count span").text());
-            // 댓글 맨위에 append
             appendReplyList(result, true);
-            // 댓글수 증가
-            $(".review-count span").text(++count);
-            $(".reply-count").text(count);
             // 댓글 내용 초기화
             $('.write-textarea').val("");
             console.log(result);
         }
     );
+    window.location.reload();
 });
 
 /* 댓글 삭제 */
-const xBtn = $('.xBtn');
 const deleteUrl = `/user-board/recipe-board-detail/reply/delete/${recipe.id}`;
-// 삭제 버튼 클릭 시 deleteReply 함수 호출
-
 
 function deleteReply(deleteBtn) {
-    let id = $(deleteBtn).data("id");
     $.ajax({
-        url: deleteUrl + `/${id}`,
+        url: deleteUrl + `/${replyDeleteId}`,
         type: 'DELETE',
         dataType: 'JSON',
         success: function(result) {
-            // let count = Number($(".review-count span").text());
-            // 댓글수 감소
-            // $(".review-count span").text(--count);
-            // $(".reply-count").text(count);
             console.log(result);
         },
         error: function(error) {
@@ -415,7 +494,6 @@ function deleteReply(deleteBtn) {
     });
     window.location.reload();
 }
-
 
 
 

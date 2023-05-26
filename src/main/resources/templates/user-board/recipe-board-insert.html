@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" style="zoom: 80%">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -11,18 +11,24 @@
     <link rel="stylesheet" href="/css/component/footer.css" />
     <link rel="stylesheet" href="/css/member/member.css" />
     <link rel="stylesheet" href="/css/member/board-insert.css" />
+    <link rel="stylesheet" href="/css/member/modal.css"/>
   </head>
   <body>
   <header class="header-stage" th:insert="~{component/header.html :: header}"></header>
   <root style="zoom: 90%">
       <section id="contents" class="container">
+        <div class="modal">
+          <div class="warn-modal">
+            <div id="content-wrap"></div>
+          </div>
+        </div>
         <div class="content-wrap">
           <div class="frame-sm">
             <form id="counselRegFrm" name="form" method="post">
               <div class="frame-right">
                 <div class="frame-cnt-inner">
                   <div class="menu-title-area">
-                    <h3 class="title-menu">게시글 작성하기</h3>
+                    <h3 class="title-menu">레시피 작성하기</h3>
                   </div>
                   <!--// menu-title-area -->
 
@@ -260,7 +266,9 @@
 
                   <div class="btn-bottom-area">
                     <button type="button" class="btn-basic-lg2 btn-grey3">
-                      <span>취소하기</span>
+                      <a href="/user-board/recipe-board-list">
+                        <span>취소하기</span>
+                      </a>
                     </button>
                     <button type="submit" class="btn-basic-lg2 btn-primary">
                       <span>작성하기</span>

@@ -1,10 +1,5 @@
 /* review-board-detail.html */
 
-/* 텍스트 더보기 */
-$('.info-area__box').on('click', function () {
-    $(this).find('.info-area__box-list').css('height', '100%');
-});
-
 /* 이미지 slide 이벤트 */
 
 $(document).ready(function () {
@@ -116,7 +111,7 @@ function showDetail() {
           <div class="refrig-bnr">
             <a href="javascript:void(0)">
               <img
-                src="https://www.rankingdak.com/resources/pc/images/img/pc_delivery_banner2.jpg"
+                src="/img/market/free_delivery.jpg"
             /></a>
           </div>
         </div>
@@ -124,13 +119,13 @@ function showDetail() {
         <div class="info-area">
           <div class="info-area__btn">
           `
-    if ($userId == review.userId) {
+    if ($userId == review.memberDTO.userId) {
         text +=
             `
-            <button type="button" class="update-btn">
+            <a href="/user-board/review-board-modify/${review.id}" class="update-btn">
               <svg
                 class="write-button-icon"
-                style="enable-background: new 0 0 1696.162 1696.143"
+                style="enable-background: new 0 0 1696.162 1696.143;margin-top: 6px;margin-left: 6px;"
                 version="1.1"
                 viewBox="0 0 1696.162 1696.143"
                 width="1696.162px"
@@ -145,8 +140,8 @@ function showDetail() {
                 </g>
                 <g id="Layer_1" />
               </svg>
-            </button>
-            <button type="button" class="delete-btn" onclick="deleteBoard()"
+            </a>
+            <button type="button" class="delete-btn" onclick="deleteModal()"
             data-id="${review.id}">
               <svg viewBox="0 0 448 512" class="delete-button-icon" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -208,25 +203,13 @@ function showDetail() {
 }
 
 showDetail();
-const goDelete = `/user-board/review-board-detail/delete/${review.id}`;
-/* 게시글 삭제 */
-function deleteBoard() {
-    $.ajax({
-        url: goDelete,
-        type: 'DELETE',
-        dataType: 'JSON',
-        success: function(result) {
-            console.log(result);
-            location.href = "/user-board/review-board-list";
-        },
-        error: function(error) {
-            console.log(error);
-        }
-    });
-}
 
+/* 텍스트 더보기 */
+$('.info-area__box').on('click', function () {
+    $(this).find('.info-area__box-list').css('height', '100%');
+});
 
-
+console.log($userId);
 
 
 
@@ -274,10 +257,17 @@ if ($userId) {
         <span class="user-id">${$userId}</span>
     `
     );
+}else{
+    $(".reply-writer-info").append(
+        `
+        <span class="user-type">비회원</span>
+        <span class="user-id">로그인 후 이용해 주세요.</span>
+    `
+    );
 }
 
 // 최신순
-$(".reivewDate").on("click", function () {
+$(".reviewDate").on("click", function () {
     page = 1;
     isReviewByDate = true
     $reviewListWrap.empty();
@@ -290,8 +280,8 @@ $(".reivewDate").on("click", function () {
     );
 });
 
-// 인기순
-$(".orderLikeCount").on("click", function () {
+// 추천순
+$(".reviewLikeCount").on("click", function () {
     page = 1;
     isReviewByDate = false;
     $reviewListWrap.empty();
@@ -304,10 +294,9 @@ $(".orderLikeCount").on("click", function () {
     );
 });
 
-window.scroll()
-
 /* 댓글 append */
 function appendReplyList(reply, isPrepend) {
+    console.log(reply);
 
     let text ='';
     let date = reply.updatedDate.split("T")[0];
@@ -322,10 +311,11 @@ function appendReplyList(reply, isPrepend) {
             cursor: pointer;
             position: absolute;
             right: 17px;
-            top: -15px;"
-            onclick="deleteReply(this)"
+            top: -15px;
+            font-size: 25px;"
+            onclick="showReplyDeleteModal(this)"
             data-id="${reply.id}"
-        >X</span>
+        >&times;</span>
     `
     }
     text +=
@@ -342,9 +332,7 @@ function appendReplyList(reply, isPrepend) {
                     ${review.boardTitle}
                 </h3>
             </div>
-            <p class="review-content">
-                ${reply.replyContent}
-            </p>
+            <p class="review-content">${reply.replyContent}</p>
             <div class="review-footer">
                 <span class="review-date">${date}</span>
                 <div class="review-btn-wrap">
@@ -352,12 +340,12 @@ function appendReplyList(reply, isPrepend) {
                         <span>도움돼요</span>
                         <span class="rec-count">${reply.replyLikeCount ? reply.replyLikeCount : 0}</span>
                     </button>`;
-        if ($userId == reply.userId) {
-            text += `<button onclick="showReplyUpdate(this)" data-onmodify="false" data-id="${reply.id}" class="review-rec-btn update_review">
+    if ($userId == reply.userId) {
+        text += `<button onclick="showReplyUpdate(this)" data-onmodify="false" data-id="${reply.id}" class="review-rec-btn update_review">
                             <span>수정하기</span>
                         </button>`;
-        }
-            `</div>
+    }
+    `</div>
                     </div>
                 </div>
             </div>
@@ -370,7 +358,6 @@ function appendReplyList(reply, isPrepend) {
     }
     $reviewListWrap.append(text);
 }
-
 
 /* 최신순, 추천순 정렬 */
 const $reviewOrder = $(".review-orders button");
@@ -411,7 +398,7 @@ function showReplyUpdate(button) {
         <form>
             <textarea
                 class="write-textarea">${contentText}</textarea
-            ><button class="write-regist-btn" type="button">
+            ><button class="write-update-btn" type="button">
                 <span class="regist">등록</span>
             </button>
             <button class="write-cancel-btn" type="button">
@@ -425,7 +412,7 @@ function showReplyUpdate(button) {
     parent.append(text);
 
     /* 등록후 ajax 전송 */
-    $(".write-regist-btn").on("click", function () {
+    $(".write-update-btn").on("click", function () {
         let data = {
             replyContent: $(this).prev(".write-textarea").val()
         }
@@ -454,12 +441,18 @@ function showReplyUpdate(button) {
     });
 }
 
+/* 게시글 삭제 */
+function deleteModal(){
+    $("#check-modal").css("display", "block");
+}
+
 /* 댓글 작성 */
 const REPLY_URL = `/user-board/review-board-detail/reply/write/${review.id}`;
 
 const $replyWriteBtn = $(".write-regist-btn");
 
 $replyWriteBtn.on("click", function () {
+    console.log("들어옴");
     if ($('.write-textarea').val() == "") {
         return;
     }
@@ -468,27 +461,28 @@ $replyWriteBtn.on("click", function () {
         REPLY_URL,
         {replyContent: $('.write-textarea').val()},
         (result) => {
-            let count = Number($(".review-count span").text());
-            // 댓글 맨위에 append
             appendReplyList(result, true);
-            // 댓글수 증가
-            $(".review-count span").text(++count);
-            $(".reply-count").text(count);
             // 댓글 내용 초기화
             $('.write-textarea').val("");
             console.log(result);
         }
     );
+    window.location.reload();
 });
+
+// 댓글 삭제 모달
+function showReplyDeleteModal(deleteBtn) {
+    replyDeleteId = $(deleteBtn).data("id");
+    $("#reply-modal").css("display", "block");
+}
 
 /* 댓글 삭제 */
 const xBtn = $('.xBtn');
 const deleteUrl = `/user-board/review-board-detail/reply/delete/${review.id}`;
 
 function deleteReply(deleteBtn) {
-    let id = $(deleteBtn).data("id");
     $.ajax({
-        url: deleteUrl + `/${id}`,
+        url: deleteUrl + `/${replyDeleteId}`,
         type: 'DELETE',
         dataType: 'JSON',
         success: function(result) {
@@ -505,7 +499,34 @@ function deleteReply(deleteBtn) {
     window.location.reload();
 }
 
+// 닫기 버튼을 클릭했을 때
+$(".close").on("click", function () {
+    $(this).closest(".modal").css("display", "none");
+});
 
+const goDelete = `/user-board/review-board-detail/delete/${review.id}`;
+// 예 버튼을 클릭했을 때
+function deleteBoard() {
+    $.ajax({
+        url: goDelete,
+        type: 'DELETE',
+        contentType: "application/json; charset=utf-8",
+        success: function() {
+            location.href = "/user-board/review-board-list";
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+}
+
+
+// 모달창 외부를 클릭했을 때
+$(window).on("click", function (event) {
+    if ($(event.target).is('.modal')) {
+        $("#check-modal").css("display", "none");
+    }
+});
 
 /* 댓글 좋아요 */
 const $replyLikeBtn = $(".review-rec-btn");

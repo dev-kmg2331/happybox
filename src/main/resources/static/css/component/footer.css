@@ -479,7 +479,7 @@ input[name='send-msg'] {
     display: flex;
     flex-direction: column;
     margin-top: 8px;
-    height: 90%;
+    height: 83%;
     gap: 5px;
     overflow-y: scroll;
 }

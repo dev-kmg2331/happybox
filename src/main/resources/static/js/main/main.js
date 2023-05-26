@@ -30,7 +30,7 @@ function appendReview(review) {
                 </div>
                 <div class="timer time-desc">
                     <span class="timer-title">
-                        ${review.boardContent}
+                        ${review.boardTitle}
                     </span>
                 </div>
                 <div class="desc-bottom">
@@ -148,13 +148,13 @@ donation.forEach(board => {
     let filePath = "/img/welfare/welfare_img_default.png";
 
     if (board.donationBoardFiles.length > 0) {
-        filePath = FILE_DISPLAY_URL + board.boardFiles[0].filePath + '/t_' + board.boardFiles[0].fileUuid + '_' + board.boardFiles[0].fileOrgName;
+        filePath = FILE_DISPLAY_URL + board.donationBoardFiles[0].filePath + '/t_' + board.donationBoardFiles[0].fileUuid + '_' + board.donationBoardFiles[0].fileOrgName;
     }
 
     text = `
         <li class="swiper-slide" style="width: 340px">
             <div class="best-list-item">
-                <a href="/display/brand/view?brandCd=1042">
+                <a href="/user-board/donate-detail/${board.id}">
                     <img src="${filePath}"/>
                 </a>
                 <div class="txt-area">

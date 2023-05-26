@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" style="zoom: 80%">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -16,7 +16,7 @@
     <section id="whole-container" style="zoom: 80%">
       <div class="page-title-area">
                   <h2 class="title-page">
-                      <a href=href="/user-board/recipe-board-list">레시피 게시판</a>
+                      <a href="/user-board/recipe-board-list">레시피 게시판</a>
                   </h2>
               </div>
       <div class="detail-container">
@@ -29,17 +29,12 @@
       </div>
       <section class="reply-wrap">
         <h3 class="reply-title">댓글</h3>
-        <div class="review-count-wrap">
-          <div class="review-orders">
-            <button class="fontW700">최신순</button>
-            <button>추천순</button>
-          </div>
-        </div>
         <!--  -->
         <div class="reply-write-wrap">
           <div class="reply-writer-info">
-            <span class="user-type">일반</span>
-            <span class="user-id">kjp1234</span>
+
+            <!-- ================== -->
+
           </div>
           <div class="write-content-wrap">
             <form>
@@ -56,10 +51,28 @@
           <!-- 댓글 리스트 -->
 
         </div>
-        <div tyle="padding-bottom: 32px;">
+        <div style="padding-bottom: 32px;">
           <button class="more-review">더보기<span>+</span></button>
         </div>
     </section>
+    <div id="check-modal" class="modal">
+      <div class="modal-content">
+        <p class="modal-title">해당 게시글을 삭제하시겠습니까?<span class="close">&times;</span></p>
+        <div class="cart-product-info">
+          <div class="modal-btn-wrap">
+            <button class="modal-btn" id="modal-yesBtn" onclick="deleteBoard()">게시글 삭제하기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="reply-modal" class="modal">
+      <div class="modal-content reply-delete-modal">
+        <p class="modal-title">댓글을 삭제하시겠습니까?<span class="close">&times;</span></p>
+        <div class="modal-btn-wrap replyBtn-wrap">
+          <button class="modal-btn" id="reply-deleteBtn" onclick="deleteReply()">댓글 삭제하기</button>
+        </div>
+      </div>
+    </div>
     <footer class="footer-stage" th:insert="~{component/footer.html :: footer}"></footer>
   </body>
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -67,6 +80,8 @@
   <script th:inline="javascript">
     let recipe = [[${recipe}]];
     let isLike = [[${isLike}]];
+    const $userId = [[${userId}]];
+    const $userRole = [[${userRole}]];
   </script>
   <script src="/js/main/header.js"></script>
   <script src="/js/member/recipe-detail.js"></script>

@@ -174,7 +174,7 @@
                             <button type="button" class="save-btn" id="goPayment">
                                 <span>결제</span>
                             </button>
-                            <button type="button" class="subscribe-btn">
+                            <button type="button" onclick="history.back()" class="subscribe-btn">
                                 <span>취소</span>
                             </button>
                         </div>
@@ -309,7 +309,7 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (result) {
-                        location.href = "/welfare/list";
+                        location.href = "/mypage/member/subscribe";
                     },
                     error: function (error) {
                         console.log("결제가 취소 되었습니다.");

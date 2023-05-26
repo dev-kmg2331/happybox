@@ -1,7 +1,9 @@
 package com.app.happybox.controller.board;
 
+import com.app.happybox.domain.user.MemberDTO;
 import com.app.happybox.entity.board.*;
 import com.app.happybox.entity.file.BoardFileDTO;
+import com.app.happybox.entity.file.UserFile;
 import com.app.happybox.entity.reply.ReplyDTO;
 import com.app.happybox.entity.subscript.Subscription;
 import com.app.happybox.entity.user.Member;
@@ -13,6 +15,7 @@ import com.app.happybox.service.reply.ReplyLikeService;
 import com.app.happybox.service.reply.ReviewBoardReplyService;
 import com.app.happybox.service.subscript.SubscriptionService;
 import com.app.happybox.service.user.MemberService;
+import com.app.happybox.service.user.UserFileService;
 import com.app.happybox.type.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,11 +58,15 @@ public class BoardController {
     private final RecipeBoardReplyService recipeBoardReplyService;
     private final ReviewBoardLikeService reviewBoardLikeService;
     private final RecipeBoardLikeService recipeBoardLikeService;
+    private final UserFileService userFileService;
 
     //    리뷰 게시판 이동
     @GetMapping("review-board-list")
     public String goReviewList(Model model, @AuthenticationPrincipal UserDetail userDetail){
-        model.addAttribute("userId", userDetail.getId());
+        Long userId = userDetail.getId();
+        if(userId != null){
+            model.addAttribute("userId", userDetail.getId());
+        }
         return "user-board/review-board-list";
     }
 
@@ -69,6 +76,18 @@ public class BoardController {
     public Slice<ReviewBoardDTO> goReviewPopularList(@PageableDefault(page=1, size=5) Pageable pageable) {
         Slice<ReviewBoardDTO> reviewBoardDTOS = reviewBoardService.getPopularReviewBoards(PageRequest.of(pageable.getPageNumber() - 1,
                         pageable.getPageSize()));
+
+        List<UserFile> userFiles = userFileService.getList();
+
+        for (int i = 0; i < reviewBoardDTOS.getContent().size(); i++) {
+            for (int j = 0; j < userFiles.size(); j++) {
+                if (reviewBoardDTOS.getContent().get(i).getMemberDTO().getId() == userFiles.get(j).getUser().getId()) {
+                    MemberDTO memberDTO = reviewBoardDTOS.getContent().get(i).getMemberDTO();
+                    memberDTO.setUserFileDTO(userFileService.userFileToDTO(userFiles.get(j)));
+                }
+            }
+        }
+
         return reviewBoardDTOS;
     }
 
@@ -80,6 +99,18 @@ public class BoardController {
                 reviewBoardService
                 .getReviewBoards(PageRequest.of(pageable.getPageNumber() - 1,
                         pageable.getPageSize()));
+
+        List<UserFile> userFiles = userFileService.getList();
+
+        for (int i = 0; i < reviewBoardDTOS.getContent().size(); i++) {
+            for (int j = 0; j < userFiles.size(); j++) {
+                if (reviewBoardDTOS.getContent().get(i).getMemberDTO().getId() == userFiles.get(j).getUser().getId()) {
+                    MemberDTO memberDTO = reviewBoardDTOS.getContent().get(i).getMemberDTO();
+                    memberDTO.setUserFileDTO(userFileService.userFileToDTO(userFiles.get(j)));
+                }
+            }
+        }
+
         return reviewBoardDTOS;
     }
 
@@ -114,6 +145,7 @@ public class BoardController {
         reviewBoardService.write(reviewBoardDTO, userId);
 
         log.info("=====================" + reviewBoardDTO);
+        log.info(userDetail.getId().toString());
     }
 
     //    리뷰 게시판 수정하기
@@ -176,7 +208,7 @@ public class BoardController {
             if(userDetail.getUserRole() == Role.DISTRIBUTOR) {
                 return null;
             }
-            reviewBoardReplyService.saveReply(replyDTO, reviewBoardId, userDetail.getId());
+            return reviewBoardReplyService.saveReply(replyDTO, reviewBoardId, userDetail.getId());
         }
         // 비로그인 제외
         return null;
@@ -215,7 +247,11 @@ public class BoardController {
     //    레시피 게시판 이동
     @GetMapping("recipe-board-list")
     public String goRecipeList(Model model, @AuthenticationPrincipal UserDetail userDetail){
-        model.addAttribute("userId", userDetail.getId());
+        Long userId = userDetail.getId();
+        if(userId != null){
+            model.addAttribute("userId", userDetail.getId());
+        }
+
         return "user-board/recipe-board-list";
     }
 
@@ -225,6 +261,17 @@ public class BoardController {
     public Slice<RecipeBoardDTO> goRecipePopularList(@PageableDefault(page=1, size=5) Pageable pageable) {
         Slice<RecipeBoardDTO> recipeBoardDTOS = recipeBoardService.getPopularRecipeBoards(PageRequest.of(pageable.getPageNumber() - 1,
                 pageable.getPageSize()));
+
+        List<UserFile> userFiles = userFileService.getList();
+
+        for (int i = 0; i < recipeBoardDTOS.getContent().size(); i++) {
+            for (int j = 0; j < userFiles.size(); j++) {
+                if (recipeBoardDTOS.getContent().get(i).getMemberDTO().getId() == userFiles.get(j).getUser().getId()) {
+                    MemberDTO memberDTO = recipeBoardDTOS.getContent().get(i).getMemberDTO();
+                    memberDTO.setUserFileDTO(userFileService.userFileToDTO(userFiles.get(j)));
+                }
+            }
+        }
         return recipeBoardDTOS;
     }
 
@@ -236,6 +283,17 @@ public class BoardController {
                 recipeBoardService
                         .getRecipeBoards(PageRequest.of(pageable.getPageNumber() - 1,
                                 pageable.getPageSize()));
+
+        List<UserFile> userFiles = userFileService.getList();
+
+        for (int i = 0; i < recipeBoardDTOS.getContent().size(); i++) {
+            for (int j = 0; j < userFiles.size(); j++) {
+                if (recipeBoardDTOS.getContent().get(i).getMemberDTO().getId() == userFiles.get(j).getUser().getId()) {
+                    MemberDTO memberDTO = recipeBoardDTOS.getContent().get(i).getMemberDTO();
+                    memberDTO.setUserFileDTO(userFileService.userFileToDTO(userFiles.get(j)));
+                }
+            }
+        }
         return recipeBoardDTOS;
     }
 
@@ -245,6 +303,11 @@ public class BoardController {
         model.addAttribute("recipe", recipeBoardService.getDetail(id));
         // 좋아요 이미 눌렀는지 검사
         model.addAttribute("isLike", recipeBoardLikeService.checkLike(id, userDetail.getId()));
+
+        if(userDetail != null) {
+            model.addAttribute("userId", userDetail.getUserId());
+            model.addAttribute("userRole", userDetail.getUserRole());
+        }
         return "user-board/recipe-board-detail";
     }
 
@@ -288,19 +351,28 @@ public class BoardController {
         return "/user-board/recipe-board-detail/" + recipeBoardDTO.getId();
     }
 
+    //    레시피 게시글 삭제
+    @DeleteMapping("recipe-board-detail/delete/{id}")
+    public String deleteRecipeBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetail userDetail) {
+        // 임시 session 값 1저장
+        recipeBoardService.delete(id, userDetail.getId());
+        log.info("===============들어옴");
+        return "user-board/recipe-board-list";
+    }
+
     //    댓글 목록
     @GetMapping("recipe-board-detail/reply/{id}")
     @ResponseBody
-    public Slice<ReplyDTO> recipeReplies(@PageableDefault(page = 1, size = 5) Pageable pageable, @PathVariable Long id, Boolean isRecipeByDate) {
+    public Slice<ReplyDTO> recipeReplies(@PageableDefault(page = 1, size = 5) Pageable pageable, @PathVariable Long id, Boolean isReviewByDate) {
         log.info(recipeBoardReplyService.findAllByRefId(
                 PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize()),
                 id,
-                isRecipeByDate
+                isReviewByDate
         ).getContent().toString());
         return recipeBoardReplyService.findAllByRefId(
                 PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize()),
                 id,
-                isRecipeByDate // 최신순 or 인기순
+                isReviewByDate // 최신순 or 인기순
         );
     }
 
@@ -309,8 +381,23 @@ public class BoardController {
     @PostMapping("recipe-board-detail/reply/write/{recipeBoardId}")
     @ResponseBody
     public ReplyDTO writeRecipeReply(@RequestBody ReplyDTO replyDTO, @PathVariable Long recipeBoardId, @AuthenticationPrincipal UserDetail userDetail) {
-        // 임시 session 값 1저장
-        return recipeBoardReplyService.saveReply(replyDTO, recipeBoardId, userDetail.getId());
+        if(userDetail != null) {
+            // 유통업자 제외
+            if(userDetail.getUserRole() == Role.DISTRIBUTOR) {
+                return null;
+            }
+            return recipeBoardReplyService.saveReply(replyDTO, recipeBoardId, userDetail.getId());
+        }
+        // 비로그인 제외
+        return null;
+    }
+
+    //    레시피 댓글 수정
+    @PatchMapping("recipe-board-detail/reply/modify/{replyId}")
+    @ResponseBody
+    public ReplyDTO modifyRecipeReply(@RequestBody ReplyDTO replyDTO, @PathVariable Long replyId) {
+        ReplyDTO updatedReply = recipeBoardReplyService.updateReply(replyId, replyDTO);
+        return updatedReply;
     }
 
     //    레시피 댓글 삭제
@@ -359,8 +446,12 @@ public class BoardController {
 
 //    기부 게시판 상세보기
     @GetMapping("donate-detail/{id}")
-    public String goDonateDetail(Model model, @PathVariable Long id){
+    public String goDonateDetail(Model model, @PathVariable Long id, @AuthenticationPrincipal UserDetail userDetail){
         model.addAttribute("donate", donationBoardService.getDetail(id));
+
+        if(userDetail != null) {
+            model.addAttribute("welfareId", userDetail.getUserId());
+        }
         return "user-board/donate-detail";
     }
 

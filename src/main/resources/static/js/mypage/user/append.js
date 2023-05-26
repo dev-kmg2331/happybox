@@ -3,8 +3,10 @@ const $append = $(".article__wrap");
 myPageService.recipeBoardListAjax();
 
 function showRecipeBoardList(recipeBoards) {
+    console.log(recipeBoards)
     let text = "";
     let image = "";
+    let profile = "";
 
     recipeBoards.content.forEach(recipeBoard => {
         if(recipeBoard.recipeBoardFiles.length != 0) {
@@ -24,19 +26,31 @@ function showRecipeBoardList(recipeBoards) {
                     <div class="profile-area">
                         <a href="javascript:void(0)">
                             <div class="profile-wrap">
-                                <div class="writer-image">
-                                    <img src="https://static.wanted.co.kr/oneid-user/profile_default.png" alt="">
+                                <div class="writer-image" style="width: 40px; height: 40px;">
+            `;
+
+        if(recipeBoard.userFileDTO != null) {
+            profile = `<img src="/image/display?fileName=${recipeBoard.userFileDTO.filePath}/${recipeBoard.userFileDTO.fileUuid}_${recipeBoard.userFileDTO.fileOrgName}">`;
+        } else {
+            profile = `<img src="/img/mypage/nomalProfile.png" alt="">`;
+        }
+
+        text += profile;
+
+        text += `
+                                    
                                 </div>
                                 <div class="writer-info-wrap">
                                     <div class="writer-info">
-                                        <div class="writer-name">${recipeBoard.memberName}</div>
+                                        <div class="writer-name">${recipeBoard.memberDTO.memberName}</div>
                                     </div>
                                     <span class="write-date" style="width: 61px;">${formattedDate}</span>
                                 </div>
                             </div>
                         </a>
                     </div>
-                    <a href="javascript:void(0)">
+                    <a href="/user-board/recipe-board-detail/${recipeBoard.id}">
+                        <input type="hidden" value="${recipeBoard.id}">
                         <h3 class="board-title">${recipeBoard.boardTitle}</h3>
                         <p class="board-content">${recipeBoard.boardContent}</p>
                         <picture>

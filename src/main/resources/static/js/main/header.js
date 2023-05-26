@@ -313,7 +313,6 @@ function createChattingRoom(aTag) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (chatRoom) {
-            console.log(chatRoom);
             connect(chatRoom.roomId, welfareId);
         }
     });
@@ -329,6 +328,7 @@ function showChatting(aTag) {
 
     // 연결
     connect(roomId);
+    console.log("$SESSION_USER_ID : " + $SESSION_USER_ID);
 
     // 입장 roomId 에 값 저장
     enterRoomId = roomId;
@@ -379,8 +379,6 @@ function onConnected(roomId) {
         })
     );
 
-    console.log(roomId);
-
     // 메시지 표시 공간 비우기
     $messageArea.empty();
 
@@ -392,12 +390,17 @@ function onConnected(roomId) {
 // 메시지를 받을 때도 마찬가지로 JSON 타입으로 받으며,
 // 넘어온 JSON 형식의 메시지를 parse 해서 사용한다.
 function onMessageReceived(payload) {
-    //console.log("payload 들어오냐? :"+payload);
+    console.log("payload 들어오냐? :"+payload);
+
     let message = JSON.parse(payload.body);
 
-    if(message.sender == null) return;
+    // 나의 메시지인 경우 return
+    /* 진짜 구린 방법이라 추후 더 나은 방법이 있나 생각해볼 것 */
+    if($SESSION_USER_ID === message.senderId) {
+        return;
+    }
 
-    prependChatMessage(message);
+    appendInputChatMessage(message);
 }
 
 // 채팅 form submit 시 message 발송
@@ -426,7 +429,6 @@ function sendMessage(event) {
 
 // 채팅 메시지 표시
 function prependChatMessage(message) {
-    console.log(message);
     let isMyMessage = message.myMessage;
 
     if(isMyMessage == null) {
@@ -445,7 +447,6 @@ function prependChatMessage(message) {
 }
 
 function appendInputChatMessage(message) {
-    console.log(message);
 
     let isMyMessage = message.myMessage;
 

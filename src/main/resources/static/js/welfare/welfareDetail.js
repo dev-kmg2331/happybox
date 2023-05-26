@@ -33,7 +33,7 @@ const WELFARE_ADDRESS = subscription.address;
 var geocoder = new kakao.maps.services.Geocoder();
 
 /* db에 있는 location이 들어갈 곳 */
-geocoder.addressSearch(`${WELFARE_ADDRESS.firstAddress} ${WELFARE_ADDRESS.addressDetail}`, function (result, status) {
+geocoder.addressSearch(`${WELFARE_ADDRESS.firstAddress}`, function (result, status) {
     // 정상적으로 검색이 완료됐으면
     if (status === kakao.maps.services.Status.OK) {
         /* 좌표 알아내는 코드 */
@@ -100,8 +100,7 @@ function showFoodList(foodCalendars) {
         if (calendar.foodList.length == 0) return;
 
         // list append
-        appendFood(calendar.foodList[0], $container);
-
+        calendar.foodList.forEach(food => appendFood(food, $container));
         // 카운트 증가
         ++count;
     });
@@ -112,11 +111,11 @@ function showFoodList(foodCalendars) {
 
 function appendFood(food, $target) {
     let text;
-    let filePath = "/img/welfare/welfare_img_default.png";
+    let filePath = "";
 
     /* 추후 주석풀기 */
-    // if(food.filePath == null || food.fileOrgName == null || food.fileUuid == null) filePath = "/img/welfare/welfare_img_default.png";
-    // else filePath = `/image/display?fileName=${food.filePath}/t_${food.fileUuid}_${food.fileOrgName}`;
+    if(food.filePath == null || food.fileOrgName == null || food.fileUuid == null) filePath = "/img/welfare/welfare_img_default.png";
+    else filePath = `/image/display?fileName=${food.filePath}/t_${food.fileUuid}_${food.fileOrgName}`;
 
     text = `
         <li
@@ -353,3 +352,17 @@ $confirm.on('click', function () {
 
 console.log($(".quantity-input").val());
 console.log(CART_URL);
+
+
+/*=======================================================================================================*/
+console.log("==================================================");
+console.log(subscription.subscriptionContent);
+$('.welfare-content').text(subscription.subscriptionContent);
+
+let src = "/img/welfare/welfare_detail_default.png";
+
+if(file.filePath != null && file.fileUuid != null && file.fileOrgName != null){
+    src = `/image/display?fileName=${file.filePath}/${file.fileUuid}_${file.fileOrgName}`;
+}
+
+$('#profile-img').attr('src', src);

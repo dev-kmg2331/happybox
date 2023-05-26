@@ -108,8 +108,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     @Transactional
     public void updateByDTO(SubscriptionWelFareDTO subscriptionWelFareDTO) {
-        Long id = subscriptionWelFareDTO.getId();
-        subscriptionRepository.findById(id).ifPresent(subscription -> {
+        subscriptionRepository.findById(subscriptionWelFareDTO.getId()).ifPresent(subscription -> {
             subscription.setSubscriptionTitle(subscriptionWelFareDTO.getSubscriptionTitle());
             subscription.setSubscriptionContent(subscriptionWelFareDTO.getSubscriptionContent());
             subscription.setSubscriptionPrice(subscriptionWelFareDTO.getSubscriptionPrice());

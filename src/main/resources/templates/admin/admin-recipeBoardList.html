@@ -19,7 +19,9 @@
         <div class="info-title-box info-title-box-flex">
             <div class="logo-box-layout">
                 <div class="logo-title-layout">
-					<img class="logo-image" src="/img/header/Logo-main.png" alt="">
+					<a href="/logout">
+						<img class="logo-image" src="/img/header/Logo-main.png" alt="">
+					</a>
                 </div>
             </div>
             <div>
@@ -31,7 +33,7 @@
         </div>
     </section>
     <main class="main-section">
-		<div id="side-bar" th:insert="~{admin/sidebar.html :: side-bar}"></div>
+		<section class="side-menu-section" th:replace="~{admin/sidebar.html :: side-bar}"></section>
         <section class="content-section">
             <div class="container">
 				<div class="container-margin">
@@ -40,7 +42,7 @@
 							<div class="board-info-title-box">
 								<span>레시피 게시물</span>
 								<div class="delete-box">
-									<button class="delete-button">게시물 삭제</button>
+<!--									<button class="delete-button">게시물 삭제</button>-->
 								</div>
 							</div>
 							<div class="info-table">
@@ -67,7 +69,7 @@
 										<td class="show-modal" th:text="*{id}"></td>
 										<td class="show-modal" th:text="*{boardTitle}"></td>
 										<td class="show-modal" th:text="*{boardContent}"></td>
-										<td class="show-modal" th:text="*{memberName}"></td>
+										<td class="show-modal" th:text="*{memberDTO.memberName}"></td>
 										<td class="show-modal" th:text="*{#temporals.format(boardRegisterDate, 'yyyy.MM.dd')}"></td>
 									</tr>
 								</table>

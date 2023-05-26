@@ -94,6 +94,9 @@ public class MypageController {
     @GetMapping("member/recipe-board")
     public Page<RecipeBoardDTO> getUserRecipeBoardList(@RequestParam(value = "page", defaultValue = "1", required = false) int page, @AuthenticationPrincipal UserDetail userDetail) {
         Page<RecipeBoardDTO> recipeBoards = recipeBoardService.getListByMemberId(PageRequest.of(page - 1, 3), userDetail.getId());
+        recipeBoards.forEach(board -> {
+            board.setUserFileDTO(userFileService.getDetail(userDetail.getId()));
+        });
         return recipeBoards;
     }
 
@@ -184,7 +187,10 @@ public class MypageController {
     public Page<SubscriptionLikeDTO> getSubscriptionBookmarkList(@RequestParam(value = "page", defaultValue = "1", required = false) int page, @AuthenticationPrincipal UserDetail userDetail) {
         Page<SubscriptionLikeDTO> bookmarkList = subscriptionLikeService.getListSubscriptionBookmarkByMemberId(PageRequest.of(page - 1, 8), userDetail.getId());
 
-        for (int i = 0; i < bookmarkList.getSize() - 1; i++) {
+        log.info(bookmarkList.getSize() + ";;;;;;;;;;;;;;;;;;;;;");
+        log.info(userFileService.getList().size() + "user ;;;;;;;");
+
+        for (int i = 0; i < bookmarkList.getContent().size(); i++) {
             for (int j = 0; j < userFileService.getList().size(); j++) {
                 if (userFileService.getList().get(j).getUser().getId() == bookmarkList.getContent().get(i).getWelfareId()) {
                     bookmarkList.getContent().get(i).setUserFileDTO(userFileService.userFileToDTO(userFileService.getList().get(j)));
@@ -206,7 +212,7 @@ public class MypageController {
     @GetMapping("user/profile-update")
     public void updateProfile(@AuthenticationPrincipal UserDetail userDetail, String filePath, String fileUuid, String fileOrgName) {
         UserFile userFile = new UserFile(filePath, fileUuid, fileOrgName, userService.getDetailByUserId(userDetail.getId()));
-        userFileService.registerProfile(userFile);
+        userFileService.registerProfile(userDetail.getId(), userFile);
     }
 
     //    회원정보수정

@@ -17,6 +17,14 @@ function showList(recipeBoardDTOS){
     let text ="";
     console.log(recipeBoardDTOS);
     recipeBoardDTOS.content.forEach((recipeDetail, i) => {
+        let userFile = recipeDetail.memberDTO.userFileDTO;
+        let userFilePath;
+
+        if(userFile){
+            userFilePath = '/image/display?fileName=' + userFile.filePath + "/t_" + userFile.fileUuid + "_" + userFile.fileOrgName;
+        }else{
+            userFilePath = "/img/mypage/nomalProfile.png";
+        }
 
         // 기본 이미지 경로
         let filePath = "";
@@ -35,20 +43,20 @@ function showList(recipeBoardDTOS){
                       ><div class="profile-wrap">
                         <div class="writer-image rw" style="margin-bottom: 0;">
                           <img
-                            src=""
+                            src="${userFilePath}"
                             alt=""
                           />
                         </div>
                         <div class="writer-info-wrap">
                           <div class="writer-info">
-                            <div class="writer-name" style="margin-left: 4px; margin-right: 0; width: 50px;">${recipeDetail.memberName}</div>
-                            <span class="write-date" style="width: 40px;">${recipeDetail.boardRegisterDate}</span>
+                            <div class="writer-name" style="margin-left: 5px; margin-right: 0; width: 50px;">${recipeDetail.memberDTO.memberName}</div>
+                            <span class="write-date" style="width: 65px;">${recipeDetail.boardRegisterDate}</span>
                           </div>
                         </div>
                       </div>
                     </a>
                   </div>
-                  <a href="javascript:void(0)"
+                  <a href="/user-board/recipe-board-detail/${recipeDetail.id}"
                     ><h3 class="board-title">${recipeDetail.boardTitle}</h3>
                     <p class="board-content">
                       ${recipeDetail.boardContent}
@@ -60,12 +68,15 @@ function showList(recipeBoardDTOS){
                     /></picture>
                     <div class="board-item-bottom">
                       <div class="recommend-btn">
-                        <svg width="18" height="18" viewBox="0 0 18 18">
-                          <path
-                            fill="currentColor"
-                            d="M13.353 2.214c.082.164.15.332.204.502.325 1.032.13 2.08-.396 3.092l-.105.191L16.253 6a.75.75 0 0 1 .743.648l.007.102v5.75a.75.75 0 0 1-.106.385l-.058.084-3.004 3.75a.75.75 0 0 1-.472.273L13.25 17H9.22a.75.75 0 0 1-.101-1.493l.102-.007h3.668l2.614-3.264V7.5h-3.91a.75.75 0 0 1-.604-1.195l.066-.077c.137-.14.36-.415.584-.778.5-.808.702-1.6.487-2.283a1.858 1.858 0 0 0-.113-.278c-.278-.551-1.075-.442-1.075-.056a3.17 3.17 0 0 1-.777 2.125c-.293.338-.59.555-.774.647l-.472.292c-.89.568-1.459 1.04-1.762 1.409l-.097.128-.058.095v.062l-.004.016-.006.093a.75.75 0 0 1-.641.641l-.102.007-.102-.007a.75.75 0 0 1-.648-.743V7.5H2.496v8h2.999l-.001-4.535.007-.102a.75.75 0 0 1 1.493.102v5.286l-.007.102a.75.75 0 0 1-.743.648H1.747l-.102-.007a.75.75 0 0 1-.648-.743v-9.5l.007-.102A.75.75 0 0 1 1.747 6h4.498l.066.005c.387-.38.92-.796 1.621-1.256l.472-.3.253-.154c.07-.035.217-.143.37-.32.226-.26.37-.576.403-.969l.008-.173c0-2.082 2.972-2.491 3.915-.619z"
-                          ></path></svg
-                        ><span class="recommend-count">${recipeDetail.recipeLikeCount}</span>
+                        <svg enable-background="new 0 0 32 32" id="Editable-line" version="1.1" viewBox="0 0 32 32" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                        style="
+                         width: 18px;
+                         margin-bottom: 2px;
+                         ">
+                            <path d="  M16,8.064c-2.974-2.753-7.796-2.753-10.77,0s-2.974,7.215,0,9.968L16,28l10.77-9.968c2.974-2.753,2.974-7.215,0-9.968  S18.974,5.312,16,8.064z" fill="none" id="XMLID_49_" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="2">
+                            </path>
+                        </svg>
+                        <span class="recommend-count">${recipeDetail.recipeLikeCount}</span>
                       </div>
                       <div class="reply-btn">
                         <svg width="18" height="18" viewBox="0 0 18 18">
@@ -98,7 +109,7 @@ $('.last-pop-btn a:first-child').click(function(e) {
     page = 1;
     loadRecipeBoardList('/user-board/recipe-board-list/recent', { page: page });
     $(window).scroll(function() {
-        if($(window).scrollTop() + $(window).height() > $(document).height() * 0.9) {
+        if($(window).scrollTop() + $(window).height() > $(document).height() * 0.7) {
             page++;
             loadRecipeBoardList('/user-board/recipe-board-list/recent', { page: page });
             // 이전에 추가된 항목 수를 업데이트
@@ -120,7 +131,7 @@ $('.last-pop-btn a:last-child').click(function(e) {
     page = 1;
     loadRecipeBoardList('/user-board/recipe-board-list/popular', { page: page });
     $(window).scroll(function() {
-        if($(window).scrollTop() + $(window).height() > $(document).height() * 0.9) {
+        if($(window).scrollTop() + $(window).height() > $(document).height() * 0.7) {
             page++;
             loadRecipeBoardList('/user-board/recipe-board-list/popular', { page: page });
             // 이전에 추가된 항목 수를 업데이트
@@ -149,7 +160,7 @@ loadRecipeBoardList('/user-board/recipe-board-list/recent', { page: page });
 
 // 스크롤 이벤트 핸들러
 $(window).scroll(function() {
-    if($(window).scrollTop() + $(window).height() > $(document).height() * 0.9) {
+    if($(window).scrollTop() + $(window).height() > $(document).height() * 0.7) {
         page++;
         if ($('.last-pop-btn a:last-child').text() == "최신순") {
             loadRecipeBoardList('/user-board/recipe-board-list/recent', { page: page });
