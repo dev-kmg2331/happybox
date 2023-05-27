@@ -187,9 +187,6 @@ public class MypageController {
     public Page<SubscriptionLikeDTO> getSubscriptionBookmarkList(@RequestParam(value = "page", defaultValue = "1", required = false) int page, @AuthenticationPrincipal UserDetail userDetail) {
         Page<SubscriptionLikeDTO> bookmarkList = subscriptionLikeService.getListSubscriptionBookmarkByMemberId(PageRequest.of(page - 1, 8), userDetail.getId());
 
-        log.info(bookmarkList.getSize() + ";;;;;;;;;;;;;;;;;;;;;");
-        log.info(userFileService.getList().size() + "user ;;;;;;;");
-
         for (int i = 0; i < bookmarkList.getContent().size(); i++) {
             for (int j = 0; j < userFileService.getList().size(); j++) {
                 if (userFileService.getList().get(j).getUser().getId() == bookmarkList.getContent().get(i).getWelfareId()) {
@@ -250,7 +247,7 @@ public class MypageController {
     @MypageHeaderValues
     @GetMapping("member/unregister")
     public String unregister(@AuthenticationPrincipal UserDetail userDetail) {
-        return "/mypage/member/withdrawal";
+        return "mypage/member/withdrawal";
     }
 
     //    회원탈퇴

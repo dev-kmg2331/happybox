@@ -144,8 +144,6 @@ public class BoardController {
         Long userId = userDetail.getId();
         reviewBoardService.write(reviewBoardDTO, userId);
 
-        log.info("=====================" + reviewBoardDTO);
-        log.info(userDetail.getId().toString());
     }
 
     //    리뷰 게시판 수정하기
@@ -163,7 +161,7 @@ public class BoardController {
 
         reviewBoardService.update(reviewBoardDTO, userDetail.getId());
         log.info(reviewBoardDTO.getId().toString());
-        return "/user-board/review-board-detail/" + reviewBoardDTO.getId();
+        return "user-board/review-board-detail/" + reviewBoardDTO.getId();
     }
 
     //    리뷰 게시글 삭제
@@ -228,7 +226,6 @@ public class BoardController {
         Long userId = userDetail.getId();
         // 임시 session 값 1저장
          reviewBoardReplyService.deleteReply(replyId, reviewBoardId, userId);
-         log.info("===============들어옴");
          return "user-board/review-board-detail";
     }
 
@@ -237,7 +234,6 @@ public class BoardController {
     @ResponseBody
     public boolean checkReviewReplyLike(@PathVariable Long replyId,  @AuthenticationPrincipal UserDetail userDetail) {
         Long userId = userDetail.getId();
-        log.info("================== 들어옴 ===============");
         // 임시 session 값 1
         return replyLikeService.checkOutLike(replyId, userId);
     }

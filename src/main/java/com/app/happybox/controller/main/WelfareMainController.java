@@ -45,8 +45,6 @@ public class WelfareMainController {
             request.getSession().setAttribute("userId", userDetail.getId());
         }
 
-        log.info("user Id : {}", request.getSession().getAttribute("userId"));
-
         /*log.info(userDetail.toString());*/
         model.addAttribute("recent", subscriptionService.findRecentTop8());
         model.addAttribute("topSale", subscriptionService.findByOrderCount(8L));

@@ -190,7 +190,7 @@ public class WelfareMyPageController {
     @MypageHeaderValues
     @GetMapping("/welfare/subscriber")
     public String getSubscriberList(@AuthenticationPrincipal UserDetail userDetail) {
-        return "/mypage/welfare/subscriber";
+        return "mypage/welfare/subscriber";
     }
 
     //    구독자 목록

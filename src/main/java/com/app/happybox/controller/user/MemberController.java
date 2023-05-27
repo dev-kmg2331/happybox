@@ -32,7 +32,7 @@ public class MemberController {
     //    일반회원 회원가입으로 이동
     @GetMapping("join")
     public String JoinForm(MemberDTO memberDTO){
-        return "/member/member-join";
+        return "member/member-join";
     }
 
     //    일반회원가입 완료

@@ -17,14 +17,14 @@ public class GlobalExceptionHandler {
     protected RedirectView handleProductNotFoundException(ProductNotFoundException e, HttpServletRequest request) {
         log.error(e.getMessage());
         log.error(request.getRequestURI());
-        return new RedirectView("product/list?failed=true");
+        return new RedirectView("/product/list?failed=true");
     }
 
     @ExceptionHandler(UserNotFoundException.class)
     protected RedirectView handleUserNotFoundException(ProductNotFoundException e, HttpServletRequest request) {
         log.error(e.getMessage());
         log.error(request.getRequestURI());
-        return new RedirectView("product/list?failed=true");
+        return new RedirectView("/product/list?failed=true");
     }
 
     @ExceptionHandler(CustomAuthenticationException.class)

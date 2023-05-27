@@ -84,7 +84,7 @@ public class DistributorMypageController {
     @GetMapping("distributor/register")
     public String registerProduct(@AuthenticationPrincipal UserDetail userDetail, Model model) {
         model.addAttribute("productDTO", new ProductDTO());
-        return "/mypage/business/product-register";
+        return "mypage/business/product-register";
     }
 
 //    상품 등록
