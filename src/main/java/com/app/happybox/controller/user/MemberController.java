@@ -41,7 +41,7 @@ public class MemberController {
         log.info("들어왔냐?");
         memberService.join(memberDTO,passwordEncoder);
         log.info(memberDTO.toString());
-        return new RedirectView("member/login");
+        return new RedirectView("/member/login");
     }
 
     //    logIn폼으로 이동
