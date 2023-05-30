@@ -101,7 +101,7 @@ topSale.forEach((sub, i) => {
                         >
                     </p>
                     <span class="price"
-                        ><em class="num">26,450</em>원
+                        ><em class="num">${sub.subscriptionPrice}</em>원
                     </span>
                 </div>
                 <!--// desc-bottom -->

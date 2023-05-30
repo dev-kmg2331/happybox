@@ -68,7 +68,7 @@ public class FileRestController {
     //    파일 불러오기
     @GetMapping("display")
     public byte[] Display(String fileName) throws Exception {
-        return fileName.contentEquals("null") || fileName.isBlank() ? null : FileCopyUtils.copyToByteArray(new File("C:/upload", fileName));
+        return fileName.contentEquals("null") || fileName.isBlank() ? null : FileCopyUtils.copyToByteArray(new File(ABSOLUTE_PATH, fileName));
     }
 
     //    현재 날짜 경로 구하기

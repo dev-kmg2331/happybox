@@ -53,13 +53,13 @@ public class MypageController {
     public RedirectView goMyPage(@AuthenticationPrincipal UserDetail userDetail) {
         switch (userDetail.getUserRole()) {
             case MEMBER:
-                return new RedirectView("mypage/member/subscribe");
+                return new RedirectView("/mypage/member/subscribe");
             case WELFARE:
-                return new RedirectView("mypage/welfare/rider/write");
+                return new RedirectView("/mypage/welfare/rider/write");
             case DISTRIBUTOR:
-                return new RedirectView("mypage/distributor/product");
+                return new RedirectView("/mypage/distributor/product");
             default:
-                return new RedirectView("main/welfare");
+                return new RedirectView("/main/welfare");
         }
     }
 
