@@ -150,16 +150,20 @@ function showDetail() {
               </svg>
             </button>
             `
-    }
-            text +=
-        `
-            <div class="like-btn-wrap">
+        if(isLike !== null) {
+            text += `
+                <div class="like-btn-wrap">
                 <a href="javascript:checkLike()">
                     <span class="like-btn">
                         <img src="/img/mypage/heart.png" alt=""/>
                     </span>
                 </a>
             </div>
+            `;
+        }
+    }
+            text +=
+        `
           </div>
           <span class="writer-button-wrap">
             <p class="writer-name">${review.memberDTO.memberName}</p>

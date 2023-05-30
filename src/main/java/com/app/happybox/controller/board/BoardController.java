@@ -118,14 +118,16 @@ public class BoardController {
     //    리뷰 게시판 상세보기
     @GetMapping("review-board-detail/{id}")
     public String goReviewDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetail userDetail) {
+        Boolean isLike = null;
         model.addAttribute("review", reviewBoardService.getDetail(id));
 
-        // 좋아요 이미 눌렀는지 검사
-        model.addAttribute("isLike", reviewBoardLikeService.checkLike(id, userDetail.getId()));
         if (userDetail != null) {
+            // 좋아요 이미 눌렀는지 검사
+            isLike = reviewBoardLikeService.checkLike(id, userDetail.getId());
             model.addAttribute("userId", userDetail.getUserId());
             model.addAttribute("userRole", userDetail.getUserRole());
         }
+        model.addAttribute("isLike", isLike);
 
         log.info(userDetail.getId().toString());
         return "user-board/review-board-detail";
@@ -294,14 +296,18 @@ public class BoardController {
     //    레시피 게시판 상세보기
     @GetMapping("recipe-board-detail/{id}")
     public String goRecipeDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetail userDetail) {
+        Boolean isLike = null;
         model.addAttribute("recipe", recipeBoardService.getDetail(id));
-        // 좋아요 이미 눌렀는지 검사
-        model.addAttribute("isLike", recipeBoardLikeService.checkLike(id, userDetail.getId()));
 
         if (userDetail != null) {
+            // 좋아요 이미 눌렀는지 검사
+            isLike = recipeBoardLikeService.checkLike(id, userDetail.getId());
             model.addAttribute("userId", userDetail.getUserId());
             model.addAttribute("userRole", userDetail.getUserRole());
         }
+
+        model.addAttribute("isLike", isLike);
+
         return "user-board/recipe-board-detail";
     }
 

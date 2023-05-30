@@ -151,8 +151,11 @@ function showDetail() {
             </button>
             `
     }
-    text +=
-        `
+
+    console.log("is Like : " + isLike);
+
+    if (isLike !== null) {
+        text += `
             <div class="like-btn-wrap">
                 <a href="javascript:checkRecipeLike()">
                     <span class="like-btn">
@@ -160,6 +163,10 @@ function showDetail() {
                     </span>
                 </a>
             </div>
+        `;
+    }
+    text +=
+        `
           </div>
           <span class="writer-button-wrap">
             <p class="writer-name">${recipe.memberDTO.memberName}</p>
@@ -191,7 +198,7 @@ $('.info-area__box').on('click', function () {
 const goDelete = `/user-board/recipe-board-detail/delete/${recipe.id}`;
 
 /* 게시글 삭제 */
-function deleteModal(){
+function deleteModal() {
     $("#check-modal").css("display", "block");
 }
 
@@ -215,10 +222,10 @@ function deleteBoard() {
         url: goDelete,
         type: 'DELETE',
         contentType: "application/json; charset=utf-8",
-        success: function() {
+        success: function () {
             location.href = "/user-board/recipe-board-list";
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
         }
     });
@@ -310,7 +317,7 @@ $(".orderLikeCount").on("click", function () {
 function appendReplyList(reply, isPrepend) {
     console.log(reply);
 
-    let text ='';
+    let text = '';
     let date = reply.updatedDate.split("T")[0];
 
     text += `
@@ -485,16 +492,15 @@ function deleteReply(deleteBtn) {
         url: deleteUrl + `/${replyDeleteId}`,
         type: 'DELETE',
         dataType: 'JSON',
-        success: function(result) {
+        success: function (result) {
             console.log(result);
         },
-        error: function(error) {
+        error: function (error) {
             console.log(error);
         }
     });
     window.location.reload();
 }
-
 
 
 /* 댓글 좋아요 */
