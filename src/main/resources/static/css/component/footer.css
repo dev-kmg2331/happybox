@@ -220,7 +220,7 @@
 
 .chat-window {
     zoom: 100%;
-    z-index: 10;
+    z-index: 1000;
     pointer-events: auto;
     overflow: hidden;
     position: fixed;
@@ -540,6 +540,7 @@ input[name='send-msg'] {
     bottom: 30px;
     right: 30px;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 0.2em 0.8em;
+    z-index: 1000;
 }
 
 .chat-show-btn svg {
