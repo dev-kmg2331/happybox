@@ -36,7 +36,9 @@ public class CsController {
 
     //    공지사항 리스트
     @GetMapping("notice")
-    public void getNoticeList() {;}
+    public String getNoticeList() {
+        return "CS/notice";
+    }
 
     //    검색을 통해 가져온 리스트
     @GetMapping("search")
@@ -83,5 +85,7 @@ public class CsController {
 
     //    FAQ로 이동
     @GetMapping("faq")
-    public void goFAQ() {;}
+    public String goFAQ() {
+        return "CS/faq";
+    }
 }
