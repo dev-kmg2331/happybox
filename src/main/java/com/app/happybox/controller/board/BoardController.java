@@ -7,6 +7,7 @@ import com.app.happybox.entity.file.UserFile;
 import com.app.happybox.entity.reply.ReplyDTO;
 import com.app.happybox.entity.subscript.Subscription;
 import com.app.happybox.entity.user.Member;
+import com.app.happybox.exception.UserNotFoundException;
 import com.app.happybox.provider.UserDetail;
 import com.app.happybox.repository.board.DonationBoardRepository;
 import com.app.happybox.service.board.*;
@@ -62,9 +63,8 @@ public class BoardController {
 
     //    리뷰 게시판 이동
     @GetMapping("review-board-list")
-    public String goReviewList(Model model, @AuthenticationPrincipal UserDetail userDetail){
-        Long userId = userDetail.getId();
-        if(userId != null){
+    public String goReviewList(Model model, @AuthenticationPrincipal UserDetail userDetail) {
+        if (userDetail != null) {
             model.addAttribute("userId", userDetail.getId());
         }
         return "user-board/review-board-list";
@@ -73,9 +73,9 @@ public class BoardController {
     //    리뷰 게시판 리스트(인기순)
     @GetMapping("review-board-list/popular")
     @ResponseBody
-    public Slice<ReviewBoardDTO> goReviewPopularList(@PageableDefault(page=1, size=5) Pageable pageable) {
+    public Slice<ReviewBoardDTO> goReviewPopularList(@PageableDefault(page = 1, size = 5) Pageable pageable) {
         Slice<ReviewBoardDTO> reviewBoardDTOS = reviewBoardService.getPopularReviewBoards(PageRequest.of(pageable.getPageNumber() - 1,
-                        pageable.getPageSize()));
+                pageable.getPageSize()));
 
         List<UserFile> userFiles = userFileService.getList();
 
@@ -94,11 +94,11 @@ public class BoardController {
     //    리뷰 게시판 리스트(최신순)
     @GetMapping("review-board-list/recent")
     @ResponseBody
-    public Slice<ReviewBoardDTO> goReviewRecentList(@PageableDefault(page=1, size=5) Pageable pageable) {
+    public Slice<ReviewBoardDTO> goReviewRecentList(@PageableDefault(page = 1, size = 5) Pageable pageable) {
         Slice<ReviewBoardDTO> reviewBoardDTOS =
                 reviewBoardService
-                .getReviewBoards(PageRequest.of(pageable.getPageNumber() - 1,
-                        pageable.getPageSize()));
+                        .getReviewBoards(PageRequest.of(pageable.getPageNumber() - 1,
+                                pageable.getPageSize()));
 
         List<UserFile> userFiles = userFileService.getList();
 
@@ -117,12 +117,12 @@ public class BoardController {
 
     //    리뷰 게시판 상세보기
     @GetMapping("review-board-detail/{id}")
-    public String goReviewDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetail userDetail){
+    public String goReviewDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetail userDetail) {
         model.addAttribute("review", reviewBoardService.getDetail(id));
 
         // 좋아요 이미 눌렀는지 검사
         model.addAttribute("isLike", reviewBoardLikeService.checkLike(id, userDetail.getId()));
-        if(userDetail != null) {
+        if (userDetail != null) {
             model.addAttribute("userId", userDetail.getUserId());
             model.addAttribute("userRole", userDetail.getUserRole());
         }
@@ -148,7 +148,7 @@ public class BoardController {
 
     //    리뷰 게시판 수정하기
     @GetMapping("review-board-modify/{id}")
-    public String goReviewModify(Model model, @PathVariable Long id){
+    public String goReviewModify(Model model, @PathVariable Long id) {
         model.addAttribute("reviewBoardDTO", reviewBoardService.getDetail(id));
         return "user-board/review-board-modify";
     }
@@ -169,7 +169,6 @@ public class BoardController {
     public String deleteReviewBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetail userDetail) {
         // 임시 session 값 1저장
         reviewBoardService.delete(id, userDetail.getId());
-        log.info("===============들어옴");
         return "user-board/review-board-list";
     }
 
@@ -201,9 +200,9 @@ public class BoardController {
     @PostMapping("review-board-detail/reply/write/{reviewBoardId}")
     @ResponseBody
     public ReplyDTO writeReviewReply(@RequestBody ReplyDTO replyDTO, @PathVariable Long reviewBoardId, @AuthenticationPrincipal UserDetail userDetail) {
-        if(userDetail != null) {
+        if (userDetail != null) {
             // 유통업자 제외
-            if(userDetail.getUserRole() == Role.DISTRIBUTOR) {
+            if (userDetail.getUserRole() == Role.DISTRIBUTOR) {
                 return null;
             }
             return reviewBoardReplyService.saveReply(replyDTO, reviewBoardId, userDetail.getId());
@@ -222,17 +221,17 @@ public class BoardController {
 
     //    리뷰 댓글 삭제
     @DeleteMapping("review-board-detail/reply/delete/{reviewBoardId}/{replyId}")
-    public String deleteReviewReply(@PathVariable Long replyId, @PathVariable Long reviewBoardId,  @AuthenticationPrincipal UserDetail userDetail) {
+    public String deleteReviewReply(@PathVariable Long replyId, @PathVariable Long reviewBoardId, @AuthenticationPrincipal UserDetail userDetail) {
         Long userId = userDetail.getId();
         // 임시 session 값 1저장
-         reviewBoardReplyService.deleteReply(replyId, reviewBoardId, userId);
-         return "user-board/review-board-detail";
+        reviewBoardReplyService.deleteReply(replyId, reviewBoardId, userId);
+        return "user-board/review-board-detail";
     }
 
     //  리뷰 댓글 좋아요
     @PostMapping("review-board-detail/reply/like/{replyId}")
     @ResponseBody
-    public boolean checkReviewReplyLike(@PathVariable Long replyId,  @AuthenticationPrincipal UserDetail userDetail) {
+    public boolean checkReviewReplyLike(@PathVariable Long replyId, @AuthenticationPrincipal UserDetail userDetail) {
         Long userId = userDetail.getId();
         // 임시 session 값 1
         return replyLikeService.checkOutLike(replyId, userId);
@@ -242,9 +241,8 @@ public class BoardController {
 
     //    레시피 게시판 이동
     @GetMapping("recipe-board-list")
-    public String goRecipeList(Model model, @AuthenticationPrincipal UserDetail userDetail){
-        Long userId = userDetail.getId();
-        if(userId != null){
+    public String goRecipeList(Model model, @AuthenticationPrincipal UserDetail userDetail) {
+        if (userDetail != null) {
             model.addAttribute("userId", userDetail.getId());
         }
 
@@ -254,7 +252,7 @@ public class BoardController {
     //    레시피 게시판 리스트(인기순)
     @GetMapping("recipe-board-list/popular")
     @ResponseBody
-    public Slice<RecipeBoardDTO> goRecipePopularList(@PageableDefault(page=1, size=5) Pageable pageable) {
+    public Slice<RecipeBoardDTO> goRecipePopularList(@PageableDefault(page = 1, size = 5) Pageable pageable) {
         Slice<RecipeBoardDTO> recipeBoardDTOS = recipeBoardService.getPopularRecipeBoards(PageRequest.of(pageable.getPageNumber() - 1,
                 pageable.getPageSize()));
 
@@ -274,7 +272,7 @@ public class BoardController {
     //    레시피 게시판 리스트(최신순)
     @GetMapping("recipe-board-list/recent")
     @ResponseBody
-    public Slice<RecipeBoardDTO> goRecipeRecentList(@PageableDefault(page=1, size=5) Pageable pageable) {
+    public Slice<RecipeBoardDTO> goRecipeRecentList(@PageableDefault(page = 1, size = 5) Pageable pageable) {
         Slice<RecipeBoardDTO> recipeBoardDTOS =
                 recipeBoardService
                         .getRecipeBoards(PageRequest.of(pageable.getPageNumber() - 1,
@@ -295,12 +293,12 @@ public class BoardController {
 
     //    레시피 게시판 상세보기
     @GetMapping("recipe-board-detail/{id}")
-    public String goRecipeDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetail userDetail){
+    public String goRecipeDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetail userDetail) {
         model.addAttribute("recipe", recipeBoardService.getDetail(id));
         // 좋아요 이미 눌렀는지 검사
         model.addAttribute("isLike", recipeBoardLikeService.checkLike(id, userDetail.getId()));
 
-        if(userDetail != null) {
+        if (userDetail != null) {
             model.addAttribute("userId", userDetail.getUserId());
             model.addAttribute("userRole", userDetail.getUserRole());
         }
@@ -331,7 +329,7 @@ public class BoardController {
 
     //    레시피 게시판 수정하기
     @GetMapping("recipe-board-modify/{id}")
-    public String goRecipeModify(Model model, @PathVariable Long id){
+    public String goRecipeModify(Model model, @PathVariable Long id) {
         model.addAttribute("recipeBoardDTO", recipeBoardService.getDetail(id));
         return "user-board/recipe-board-modify";
     }
@@ -377,9 +375,9 @@ public class BoardController {
     @PostMapping("recipe-board-detail/reply/write/{recipeBoardId}")
     @ResponseBody
     public ReplyDTO writeRecipeReply(@RequestBody ReplyDTO replyDTO, @PathVariable Long recipeBoardId, @AuthenticationPrincipal UserDetail userDetail) {
-        if(userDetail != null) {
+        if (userDetail != null) {
             // 유통업자 제외
-            if(userDetail.getUserRole() == Role.DISTRIBUTOR) {
+            if (userDetail.getUserRole() == Role.DISTRIBUTOR) {
                 return null;
             }
             return recipeBoardReplyService.saveReply(replyDTO, recipeBoardId, userDetail.getId());
@@ -399,18 +397,17 @@ public class BoardController {
     //    레시피 댓글 삭제
     @DeleteMapping("recipe-board-detail/reply/delete/{recipeBoardId}/{replyId}")
     public String deleteRecipeReply(@PathVariable Long replyId, @PathVariable Long recipeBoardId, @AuthenticationPrincipal UserDetail userDetail) {
-        // 임시 session 값 1저장
+        if(userDetail == null) throw new UserNotFoundException();
+
         Long userId = userDetail.getId();
         recipeBoardReplyService.deleteReply(replyId, recipeBoardId, userId);
-        log.info("===============들어옴");
         return "user-board/recipe-board-detail";
     }
+
     //  레시피 댓글 좋아요
     @PostMapping("recipe-board-detail/reply/like/{replyId}")
     @ResponseBody
     public boolean checkRecipeReplyLike(@PathVariable Long replyId, @AuthenticationPrincipal UserDetail userDetail) {
-        log.info("================== 들어옴 ===============");
-        // 임시 session 값 1
         return replyLikeService.checkOutLike(replyId, userDetail.getId());
     }
 
@@ -418,14 +415,16 @@ public class BoardController {
 
     //    기부 게시판 리스트
     @GetMapping("donate-list")
-    public String goDonateList(Model model, @AuthenticationPrincipal UserDetail userDetail){
-        model.addAttribute("userId", userDetail.getId());
+    public String goDonateList(Model model, @AuthenticationPrincipal UserDetail userDetail) {
+        if (userDetail != null) model.addAttribute("userId", userDetail.getId());
+
         return "user-board/donate-list";
     }
+
     //    기부 게시판 최신순
     @GetMapping("donate-list/recent")
     @ResponseBody
-    public Slice<DonationBoardDTO> getRecentDonateBoardList(@PageableDefault(page=1, size=5) Pageable pageable) {
+    public Slice<DonationBoardDTO> getRecentDonateBoardList(@PageableDefault(page = 1, size = 5) Pageable pageable) {
         Slice<DonationBoardDTO> donationBoardDTOS = donationBoardService.getRecentList(PageRequest.of(pageable.getPageNumber() - 1,
                 pageable.getPageSize()));
         return donationBoardDTOS;
@@ -434,28 +433,28 @@ public class BoardController {
     //    기부 게시판 인기순
     @GetMapping("donate-list/popular")
     @ResponseBody
-    public Slice<DonationBoardDTO> getPopularDonateBoardList(@PageableDefault(page=1, size=5) Pageable pageable) {
+    public Slice<DonationBoardDTO> getPopularDonateBoardList(@PageableDefault(page = 1, size = 5) Pageable pageable) {
         Slice<DonationBoardDTO> donationBoardDTOS = donationBoardService.getPopularList(PageRequest.of(pageable.getPageNumber() - 1,
                 pageable.getPageSize()));
         return donationBoardDTOS;
     }
 
-//    기부 게시판 상세보기
+    //    기부 게시판 상세보기
     @GetMapping("donate-detail/{id}")
-    public String goDonateDetail(Model model, @PathVariable Long id, @AuthenticationPrincipal UserDetail userDetail){
+    public String goDonateDetail(Model model, @PathVariable Long id, @AuthenticationPrincipal UserDetail userDetail) {
         model.addAttribute("donate", donationBoardService.getDetail(id));
 
-        if(userDetail != null) {
+        if (userDetail != null) {
             model.addAttribute("welfareId", userDetail.getUserId());
         }
         return "user-board/donate-detail";
     }
 
-//    기부 게시판 작성
+    //    기부 게시판 작성
     @GetMapping("donate-insert")
     public void goDonateWrite(Model model) {
         model.addAttribute("donationBoard", new DonationBoardDTO());
-}
+    }
 
     @PostMapping("donate-insert")
     @ResponseBody
@@ -467,9 +466,9 @@ public class BoardController {
 
     }
 
-//    기부 게시판 수정
+    //    기부 게시판 수정
     @GetMapping("donate-modify/{id}")
-    public String goDonateModify(Model model, @PathVariable Long id){
+    public String goDonateModify(Model model, @PathVariable Long id) {
         model.addAttribute("donationBoardDTO", donationBoardService.getDetail(id));
         return "user-board/donate-modify";
     }
@@ -486,7 +485,7 @@ public class BoardController {
         return "/user-board/donate-detail/" + donationBoardDTO.getId();
     }
 
-//    기부 게시판 삭제
+    //    기부 게시판 삭제
     @DeleteMapping("donate-detail/delete/{id}")
     @ResponseBody
     public void deleteDonate(@PathVariable Long id, @AuthenticationPrincipal UserDetail userDetail) {

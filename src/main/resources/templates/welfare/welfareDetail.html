@@ -373,16 +373,12 @@
     let file = [[${file}]];
     let isLike = [[${isLike}]];
     let userId = [[${userId}]];
-    console.log("===========================  유저 아이디는??===============================");
-    console.log(userId);
-    console.log(file);
 
     $(".welfare-location").text(subscription.address.firstAddress);
     $(".welfare-title").text(subscription.subscriptionTitle);
     $(".welfare-name").text(subscription.welfareName);
     $(".total-price").text(subscription.subscriptionPrice.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
     $("#sub-order-count").text(subscription.orderCount.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ","));
-    console.log(subscription);
 </script>
 <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.js"></script>
 <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
