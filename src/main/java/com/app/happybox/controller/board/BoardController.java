@@ -297,7 +297,6 @@ public class BoardController {
     @GetMapping("recipe-board-detail/{id}")
     public String goRecipeDetail(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetail userDetail) {
         Boolean isLike = null;
-        model.addAttribute("recipe", recipeBoardService.getDetail(id));
 
         if (userDetail != null) {
             // 좋아요 이미 눌렀는지 검사
